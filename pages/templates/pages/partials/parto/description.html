@@ -1,0 +1,12 @@
+{% load static %}
+<section>
+    <div class="row m-3">
+        <div class="col-8">
+
+            <p>{{ object.description }}</p>
+        </div>
+        <div class="col-4">
+            <img src="{{ object.photo.url }}" alt="My Photo" class="w-100">
+        </div>
+    </div>
+</section>

@@ -1,0 +1,40 @@
+{% load static %}
+<section class="event-section">
+    <div class="row m-3 gx-2">
+
+        <!-- Repeat the following col for 40 tiles -->
+        {#        <div class="col-xxl-2">#}
+        {#            <div class="card">#}
+        {#                <img src="{{ MEDIA_URL }}aboutme/billie.jpg" alt="my photo" class="w-100">#}
+        {#            </div>#}
+        {#        </div>#}
+        {% for event in events %}
+
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-2 col-xxl-1 mb-2">
+                <a
+                        class="nav-link"
+                        href=""
+                        hx-get="{% url 'event-detail' event.pk %}"
+                        hx-target=".event-section">
+                    <div class="card border-0">
+                        <div class="square-container position-relative overflow-hidden">
+                            <img src="{{ event.thumbnail.image.url }}"
+                                 alt="the event preview"
+                                 class="position-absolute w-100 h-100"
+                                 style="object-fit: cover; object-position: center center;">
+                        </div>
+
+                        <div class="card-overlay hover-shadow text-light">
+                            <div class="p-1">
+                                <h6>{{ event.name }}</h6>
+                                <p style="font-size: 10pt;">{{ event.get_status_display }}</p>
+                                <p style="font-size: 10pt;">{{ event.event_date.year }}</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</section>
