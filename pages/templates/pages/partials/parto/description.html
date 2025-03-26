@@ -6,11 +6,7 @@
             <p>{{ object.description }}</p>
         </div>
         <div class="col-4">
-            {% if object.photo.url %}
-                <img src="{{ object.photo.url }}" alt="My Photo" class="w-100">
-            {% else %}
-                <p>there is no description image yet</p>
-            {% endif %}
+            <img src="{{ object.photo.url }}" alt="My Photo" class="w-100">
         </div>
     </div>
 </section>

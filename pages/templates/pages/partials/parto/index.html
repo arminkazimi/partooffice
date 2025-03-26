@@ -37,7 +37,6 @@ loading...
                        href=""
                        hx-get="{% url 'event-list' %}"
                        hx-target=".main-content"
-                       hx-indicator=".loading-indicator"
                        hx-on:click="setActive(this)">Events</a>
                 </li>
                 <li class="nav-item">
@@ -46,7 +45,7 @@ loading...
                        href=""
                        hx-get="{% url 'contacts' %}"
                        hx-target=".main-content"
-                       hx-indicator=".loading-indicator"
+
                        hx-on:click="setActive(this)">Contacts</a>
                 </li>
                 <li class="nav-item">

@@ -43,7 +43,6 @@ def description(request):
 
 
 def event(request):
-    time.sleep(3)
     context = {'active_section': 'events', }
     return render(request, 'pages/partials/parto/events.html', context)
 
