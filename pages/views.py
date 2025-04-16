@@ -11,14 +11,14 @@ def landing(request):
     about = AboutMe.objects.first()
     projects = Project.objects.all().order_by('-created_at')
 
-    context = {'parto': True, 'active_section': 'description', 'projects': projects, 'object': about, }
-    request.session['current_content'] = 'parto'
+    context = {'office': True, 'active_section': 'projects', 'projects': projects, 'object': about, }
+    request.session['current_content'] = 'office'
 
     return render(request, 'pages/landing.html', context=context)
 
 
 def toggle_page(request):
-    current = request.session.get('current_content', 'parto')
+    current = request.session.get('current_content', 'office')
     if current == 'office':
         request.session['current_content'] = 'parto'
         # Get the first (and only) AboutMe entry

@@ -21,12 +21,12 @@ on click toggle between .d-none and .d-block on #parto-menu">
                         <div class="d-flex justify-content-start align-items-center mt-2 x-ms-n5">
 
                             <div class="x-primary">part</div>
-                            <div id="parto" class=" circle active"></div>
+                            <div id="parto" class=" circle deactivated"></div>
                         </div>
                         <div class="d-flex justify-content-start align-items-center mt-0 x-ms-n1">
 
 
-                            <div id="office" class="circle deactivated"></div>
+                            <div id="office" class="circle active"></div>
                             <div class="">ffice</div>
 
                         </div>
@@ -43,7 +43,7 @@ on click toggle between .d-none and .d-block on #parto-menu">
                         <div class="mobile-menu">
 
                             <nav>
-                                <ul id="parto-menu" class="d-block nav nav-bar flex-column">
+                                <ul id="parto-menu" class="d-none nav nav-bar flex-column">
                                     <li class="nav-item">
                                         <a class="link-light nav-link x-active disabled"
                                            id="description"
@@ -81,7 +81,7 @@ on click toggle between .d-none and .d-block on #parto-menu">
                                            hx-on:click="setActive(this)">Jobs</a>
                                     </li>
                                 </ul>
-                                <ul id="office-menu" class="d-none nav nav-bar flex-column">
+                                <ul id="office-menu" class="d-block nav nav-bar flex-column">
                                     <li class="nav-item">
                                         <a class="link-light nav-link x-active disabled"
                                            id="projects"
@@ -126,7 +126,7 @@ on click toggle between .d-none and .d-block on #parto-menu">
         </div>
         <div class="row gx-0 content flex-grow-1">
 
-            {% include 'pages/partials/parto/index.html' %}
+            {% include 'pages/partials/office/index.html' %}
 
 
         </div>
