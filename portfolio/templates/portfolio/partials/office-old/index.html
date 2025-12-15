@@ -1,0 +1,61 @@
+<div class="col-xxl-11 col-xl-10 col-lg-10 col-md-9 col-sm-12 col-12">
+    <div class="loading-indicator">
+        Loading...
+    </div>
+
+    <div class="main-content">
+
+        {% include 'portfolio/partials/office/projects.html' %}
+
+    </div>
+
+</div>
+<div class="desktop-menu col-xxl-1 col-xl-2 col-lg-2 col-md-3 x-bg-primary">
+    <!-- Fixed Sidebar for Desktop -->
+    <div class="sidebar mt-5">
+        <nav>
+            <ul class="nav nav-bar flex-column">
+                <li class="nav-item">
+                    <a class="link-light nav-link x-active disabled"
+                       id="projects"
+                       href=""
+                       hx-get="{% url 'project-list' %}"
+                       hx-target=".main-content"
+                       hx-indicator=".loading-indicator"
+                       hx-on:click="setActive(this)">Projects</a>
+                </li>
+                <li class="nav-item">
+                    <a class="link-light nav-link"
+                       id="production"
+                       href=""
+                       hx-get="{% url 'product-retrieve' %}"
+                       hx-target=".main-content"
+                       hx-indicator=".loading-indicator"
+                       hx-on:click="setActive(this)">Production</a>
+                </li>
+                <li class="nav-item">
+                    <a class="link-light nav-link"
+                       id="design-order"
+                       href=""
+                       hx-get="{% url 'design-create' %}"
+                       hx-target=".main-content"
+                       hx-indicator=".loading-indicator"
+                       hx-on:click="setActive(this)">Design order</a>
+                </li>
+                <li class="nav-item">
+                    <a class="link-light nav-link"
+                       id="education"
+                       href=""
+                       hx-get="{% url 'education' %}"
+                       hx-target=".main-content"
+                       hx-on:click="setActive(this)">Education</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+
+
+

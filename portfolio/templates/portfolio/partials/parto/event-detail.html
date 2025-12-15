@@ -1,0 +1,103 @@
+{% load static %}
+<section class="event-section">
+    <div class="row m-3 g-3">
+        <div class="col-12 col-lg-6">
+            <!-- Slider Container -->
+            <div class="event-slider-container position-relative overflow-hidden bg-dark"
+                 style="height: 400px;">
+                <!-- Slides -->
+                <div class="event-slider h-100">
+                    {% for image in event.images.all %}
+                        <div class="event-slide position-absolute top-0 start-0 w-100 h-100 {% if forloop.first %}active{% endif %}">
+                            <img src="{{ image.image.url }}"
+                                 alt="{{ image.alt_text|default:'Event image' }}"
+                                 class="img-fluid h-100 w-100 object-fit-cover">
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="slider-nav position-absolute top-50 start-0 end-0 d-flex justify-content-between px-3">
+                    <button data-slider-action="prev"
+                            class="event-x-slide btn btn-dark p-2">
+                        ‹
+                    </button>
+                    <button data-slider-action="next"
+                            class="event-x-slide btn btn-dark p-2">
+                        ›
+                    </button>
+                </div>
+
+
+            </div>
+            <!-- Photo Counter -->
+            <div class="x-counter">
+                <div class="photo-counter ">
+                    <span class="current-index">1</span>/<span
+                        class="total-slides">{{ event.images.count }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Column -->
+        <div class="col-6 d-flex flex-column justify-content-between">
+            <div class="">
+                <a href=""
+                   hx-get="{% url 'event-list' %}"
+                   hx-target=".event-section"
+                   class="text-secondary text-decoration-none"
+                   role="button">Back</a>
+            </div>
+            <div class="event-detail mb-4">
+
+                <h6 class="">{{ event.name }}</h6>
+                <p class="">{{ event.get_status_display }}</p>
+                <p class="">{{ event.usage }}</p>
+                <p class="">{{ event.event_date }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+
+</style>
+
+<script>
+
+    // Initialize counters
+    document.querySelectorAll('.event-slider-container').forEach(container => {
+        const slides = container.querySelectorAll('.event-slide');
+        const currentIndex = Array.from(slides).findIndex(slide => slide.classList.contains('active'));
+        {#container.querySelector('.current-index').textContent = currentIndex + 1;#}
+        document.querySelectorAll('.x-counter').forEach(xCounter => {
+            xCounter.querySelector('.current-index').textContent = currentIndex + 1;
+        });
+    });
+
+    // Add slide navigation functionality
+    document.querySelectorAll('.event-x-slide').forEach(button => {
+        button.addEventListener('click', function () {
+            const action = this.dataset.sliderAction;
+            const container = this.closest('.event-slider-container');
+            const slides = container.querySelectorAll('.event-slide');
+            const currentIndex = Array.from(slides).findIndex(slide => slide.classList.contains('active'));
+            let newIndex = currentIndex;
+
+            if (action === 'next') {
+                newIndex = (currentIndex + 1) % slides.length;
+            } else {
+                newIndex = (currentIndex - 1 + slides.length) % slides.length;
+            }
+
+            slides[currentIndex].classList.remove('active');
+            slides[newIndex].classList.add('active');
+
+            // Update counter display
+            document.querySelectorAll('.x-counter').forEach(xCounter => {
+                xCounter.querySelector('.current-index').textContent = newIndex + 1;
+            });
+        });
+    });
+
+</script>

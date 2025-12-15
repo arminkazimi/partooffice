@@ -1,0 +1,60 @@
+{% load static %}
+<!--
+<section class="project-section">
+    <div class="row m-3 gx-2">
+
+{#         Repeat the following col for 40 tiles #}
+        {#        <div class="col-xxl-2">#}
+        {#            <div class="card">#}
+        {#                <img src="{{ MEDIA_URL }}aboutme/billie.jpg" alt="my photo" class="w-100">#}
+        {#            </div>#}
+        {#        </div>#}
+{#        {% for project in projects %}#}
+
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-2 col-xxl-1 mb-2">
+                <a
+                        class="nav-link"
+                        href=""
+{#                        hx-get="{% url 'project-detail' project.pk %}"#}
+                        hx-target=".project-section">
+                    <div class="card border-0">
+                        <div class="square-container position-relative overflow-hidden">
+{#                            <img src="{{ project.thumbnail.image.url }}"#}
+                                 alt="the project preview"
+                                 class="position-absolute w-100 h-100"
+                                 style="object-fit: cover; object-position: center center;">
+                        </div>
+
+                        <div class="card-overlay hover-shadow text-light">
+                            <div class="p-1">
+{#                                <h6>{{ project.name }}</h6>#}
+{#                                <p style="font-size: 10pt;">{{ project.get_status_display }}</p>#}
+{#                                <p style="font-size: 10pt;">{{ project.project_date.year }}</p>#}
+
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+{#        {% endfor %}#}
+    </div>
+</section>
+-->
+
+<template id="projects-section">
+    <span id="page-title"><h2>Projects</h2></span>
+    <div id="projects-container">
+        <div id="page-header" class="projects-header"></div>
+        <div id="projects-content">
+            <div class="cell">cell</div>
+            <div class="cell">cell</div>
+            <div class="cell">cell</div>
+            <div class="cell">cell</div>
+            <div class="cell">cell</div>
+            <div class="cell">cell</div>
+            <div id="page-number">1 2 3</div>
+
+        </div>
+    </div>
+</template>
+
