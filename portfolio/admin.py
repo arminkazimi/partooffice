@@ -146,34 +146,14 @@ class JobAdmin(admin.ModelAdmin):
 #
 class ProjectImageInline(admin.TabularInline):
     model = ProjectImage
-    min_num = 1
     extra = 2
-    fields = ('image', 'caption', 'is_thumbnail')
-    readonly_fields = ('is_thumbnail',)
-
-    def is_thumbnail(self, obj):
-        # obj may be None for the "empty" inline forms
-        try:
-            project_thumbnail = obj.project.thumbnail
-            return obj and project_thumbnail and (obj.id == project_thumbnail.id)
-        except Exception:
-            return False
-    is_thumbnail.boolean = True
-    is_thumbnail.short_description = 'Is Thumbnail'
+    fields = ('image', 'caption')
 
 
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = '__all__'
-
-    def clean(self):
-        cleaned_data = super().clean()
-        # if editing existing project and no thumbnail set, ensure at least one image exists
-        if self.instance.pk and not cleaned_data.get('thumbnail'):
-            if not self.instance.images.exists():
-                raise forms.ValidationError("You must have at least one image for existing projects")
-        return cleaned_data
 
 
 @admin.register(Project)
@@ -190,7 +170,7 @@ class ProjectAdmin(admin.ModelAdmin):
         ('Thumbnail Selection', {
             'fields': ('thumbnail',),
             'classes': ('collapse',),
-            'description': 'Select an uploaded image as thumbnail (if left blank, first image will be used)'
+            'description': 'Upload a thumbnail image for this project'
         }),
         ('Metadata', {
             'fields': ('created_at', 'updated_at'),
@@ -199,44 +179,14 @@ class ProjectAdmin(admin.ModelAdmin):
     )
 
     def thumbnail_preview(self, obj):
-        if obj and obj.thumbnail and getattr(obj.thumbnail, 'image', None):
-            return format_html('<img src="{}" style="max-height: 50px;">', obj.thumbnail.image.url)
+        if obj and obj.thumbnail and getattr(obj.thumbnail, 'url', None):
+            return format_html('<img src="{}" style="max-height: 50px;">', obj.thumbnail.url)
         return "No thumbnail"
     thumbnail_preview.short_description = 'Preview'
 
     def status_display(self, obj):
         return obj.get_status_display()
     status_display.short_description = 'Status'
-
-    def get_form(self, request, obj=None, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
-        if obj:
-            # limit thumbnail choices to this project's images only
-            form.base_fields['thumbnail'].queryset = obj.images.all()
-        else:
-            # hide thumbnail field for new objects until images are uploaded
-            form.base_fields['thumbnail'].widget = forms.HiddenInput()
-            form.base_fields['thumbnail'].required = False
-        return form
-
-    def save_model(self, request, obj, form, change):
-        super().save_model(request, obj, form, change)
-        if not change:
-            obj.refresh_from_db()
-
-    def save_related(self, request, form, formsets, change):
-        super().save_related(request, form, formsets, change)
-        project = form.instance
-
-        if not change and project.images.exists():
-            if not project.thumbnail:
-                project.thumbnail = project.images.first()
-                project.save(update_fields=['thumbnail'])
-
-        # Ensure thumbnail belongs to project images
-        if project.thumbnail and project.thumbnail not in project.images.all():
-            project.thumbnail = None
-            project.save(update_fields=['thumbnail'])
 
     def delete_queryset(self, request, queryset):
         for obj in queryset:
@@ -251,32 +201,14 @@ class ProjectAdmin(admin.ModelAdmin):
 #
 class EventImageInline(admin.TabularInline):
     model = EventImage
-    min_num = 1
     extra = 2
-    fields = ('image', 'caption', 'is_thumbnail')
-    readonly_fields = ('is_thumbnail',)
-
-    def is_thumbnail(self, obj):
-        try:
-            event_thumbnail = obj.event.thumbnail
-            return obj and event_thumbnail and (obj.id == event_thumbnail.id)
-        except Exception:
-            return False
-    is_thumbnail.boolean = True
-    is_thumbnail.short_description = 'Is Thumbnail'
+    fields = ('image', 'caption')
 
 
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = '__all__'
-
-    def clean(self):
-        cleaned_data = super().clean()
-        if self.instance.pk and not cleaned_data.get('thumbnail'):
-            if not self.instance.images.exists():
-                raise forms.ValidationError("You must have at least one image for existing events")
-        return cleaned_data
 
 
 @admin.register(Event)
@@ -293,7 +225,7 @@ class EventAdmin(admin.ModelAdmin):
         ('Thumbnail Selection', {
             'fields': ('thumbnail',),
             'classes': ('collapse',),
-            'description': 'Select an uploaded image as thumbnail (if left blank, first image will be used)'
+            'description': 'Upload a thumbnail image for this event'
         }),
         ('Metadata', {
             'fields': ('created_at', 'updated_at'),
@@ -302,42 +234,14 @@ class EventAdmin(admin.ModelAdmin):
     )
 
     def thumbnail_preview(self, obj):
-        if obj and obj.thumbnail and getattr(obj.thumbnail, 'image', None):
-            return format_html('<img src="{}" style="max-height: 50px;">', obj.thumbnail.image.url)
+        if obj and obj.thumbnail and getattr(obj.thumbnail, 'url', None):
+            return format_html('<img src="{}" style="max-height: 50px;">', obj.thumbnail.url)
         return "No thumbnail"
     thumbnail_preview.short_description = 'Preview'
 
     def status_display(self, obj):
         return obj.get_status_display()
     status_display.short_description = 'Status'
-
-    def get_form(self, request, obj=None, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
-        if obj:
-            form.base_fields['thumbnail'].queryset = obj.images.all()
-        else:
-            form.base_fields['thumbnail'].widget = forms.HiddenInput()
-            form.base_fields['thumbnail'].required = False
-        return form
-
-    def save_model(self, request, obj, form, change):
-        super().save_model(request, obj, form, change)
-        if not change:
-            obj.refresh_from_db()
-
-    def save_related(self, request, form, formsets, change):
-        super().save_related(request, form, formsets, change)
-        event = form.instance
-
-        if not change and event.images.exists():
-            if not event.thumbnail:
-                event.thumbnail = event.images.first()
-                event.save(update_fields=['thumbnail'])
-
-        # Validate thumbnail belongs to event images
-        if event.thumbnail and event.thumbnail not in event.images.all():
-            event.thumbnail = None
-            event.save(update_fields=['thumbnail'])
 
     def delete_queryset(self, request, queryset):
         for obj in queryset:
