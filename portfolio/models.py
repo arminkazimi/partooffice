@@ -1,7 +1,5 @@
 # myapp/models.py
 from django.db import models
-from django.db.models.signals import pre_delete
-from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 
 
@@ -138,12 +136,6 @@ class Project(models.Model):
     def __str__(self):
         return self.name
 
-    def update_thumbnail(self):
-        """Update thumbnail to first available image or None"""
-        self.thumbnail = self.images.first()
-        self.save(update_fields=['thumbnail'])
-
-
 class ProjectImage(models.Model):
     project = models.ForeignKey(
         Project,
@@ -179,22 +171,10 @@ class Event(models.Model):
     event_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    thumbnail = models.OneToOneField(
-        'EventImage',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='main_thumbnail'
-    )
+    thumbnail = models.ImageField(upload_to='events/thumbnails/', null=True, blank=True)
 
     def __str__(self):
         return self.name
-
-    def update_thumbnail(self):
-        """Update thumbnail to first available image or None"""
-        self.thumbnail = self.images.first()
-        self.save(update_fields=['thumbnail'])
-
 
 class EventImage(models.Model):
     event = models.ForeignKey(
@@ -222,18 +202,3 @@ class Job(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-
-@receiver(pre_delete, sender=ProjectImage)
-def handle_image_deletion(sender, instance, **kwargs):
-    """Update thumbnail when image is deleted"""
-    project = instance.project
-    if project.thumbnail == instance:
-        project.update_thumbnail()
-
-
-@receiver(pre_delete, sender=EventImage)
-def handle_image_deletion(sender, instance, **kwargs):
-    """Update thumbnail when image is deleted"""
-    event = instance.event
-    if event.thumbnail == instance:
-        event.update_thumbnail()
