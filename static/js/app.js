@@ -18,6 +18,9 @@ let index = 0;
 
 let cells;
 let backBtn;
+let jobsForm;
+let jobsStatus;
+let jobsSubmitBtn;
 
 let app = {
     _site: 'office',
@@ -73,6 +76,65 @@ const cellClickHandler = (id) => {
 
     backBtn = document.getElementById('back');
     backBtn.addEventListener('click', backClickHandler)
+};
+
+const getJobsPayload = () => ({
+    name: document.getElementById('jobs-fullname')?.value?.trim() || '',
+    email: document.getElementById('jobs-email')?.value?.trim() || '',
+    phone_number: document.getElementById('jobs-phone')?.value?.trim() || '',
+});
+
+const renderJobsStatus = (message, isError = false) => {
+    if (!jobsStatus) return;
+    jobsStatus.textContent = message;
+    jobsStatus.classList.toggle('error', Boolean(isError));
+};
+
+const submitJobsForm = async (event) => {
+    event.preventDefault();
+
+    const payload = getJobsPayload();
+    if (jobsSubmitBtn) {
+        jobsSubmitBtn.disabled = true;
+        jobsSubmitBtn.textContent = 'Saving...';
+    }
+    renderJobsStatus('');
+
+    try {
+        const res = await fetch('api/jobs/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) {
+            const errorText = `Save failed (HTTP ${res.status})`;
+            renderJobsStatus(errorText, true);
+            throw new Error(errorText);
+        }
+
+        renderJobsStatus('Saved successfully.');
+        jobsForm?.reset();
+    } catch (err) {
+        console.error('jobs submit failed', err);
+    } finally {
+        if (jobsSubmitBtn) {
+            jobsSubmitBtn.disabled = false;
+            jobsSubmitBtn.textContent = 'Save';
+        }
+    }
+};
+
+const initJobsForm = () => {
+    jobsForm = document.getElementById('jobs-form');
+    jobsStatus = document.getElementById('jobs-status');
+    jobsSubmitBtn = document.getElementById('jobs-submit');
+
+    if (!jobsForm) return;
+
+    jobsForm.addEventListener('submit', submitJobsForm);
 };
 const backClickHandler = () => {
     app.isDetail = false;
@@ -222,6 +284,7 @@ const menuClickHandler = (event) => {
                 console.log('contacts clicked', item);
                 break;
             case 'jobs':
+                initJobsForm();
                 console.log('jobs clicked', item);
                 break;
             // ...
