@@ -98,12 +98,22 @@ const toggleJobsSubmittingState = (form, isSubmitting) => {
     submitBtn.textContent = isSubmitting ? 'Saving...' : 'Save';
 };
 
+const getCookie = (name) => {
+    if (!document.cookie) return null;
+    const token = document.cookie
+        .split(';')
+        .map(cookie => cookie.trim())
+        .find(cookie => cookie.startsWith(`${name}=`));
+    return token ? decodeURIComponent(token.split('=')[1]) : null;
+};
+
 const submitJobsForm = async (event) => {
     if (!event.target || event.target.id !== 'jobs-form') return;
     event.preventDefault();
 
     const form = event.target;
     const payload = getJobsPayload(form);
+    const csrfToken = getCookie('csrftoken');
 
     toggleJobsSubmittingState(form, true);
     renderJobsStatus(form, '');
@@ -113,6 +123,7 @@ const submitJobsForm = async (event) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                ...(csrfToken ? { 'X-CSRFToken': csrfToken } : {}),
             },
             body: JSON.stringify(payload),
         });
