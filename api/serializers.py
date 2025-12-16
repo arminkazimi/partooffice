@@ -85,11 +85,17 @@ class ProjectSerializer(serializers.ModelSerializer):
         )
 
     def get_thumbnail_url(self, obj):
-        # thumbnail is a OneToOneField to ProjectImage
-        if not obj.thumbnail or not getattr(obj.thumbnail, "image", None):
+        thumbnail = getattr(obj, "thumbnail", None)
+
+        if not thumbnail:
             return None
+
+        try:
+            url = thumbnail.url
+        except ValueError:
+            return None
+
         request = self.context.get("request")
-        url = obj.thumbnail.image.url
         return request.build_absolute_uri(url) if request else url
 
 
