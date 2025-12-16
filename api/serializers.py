@@ -171,10 +171,10 @@ class EventSerializer(serializers.ModelSerializer):
 
     def get_thumbnail_url(self, obj):
         thumb = getattr(obj, "thumbnail", None)
-        if not thumb or not getattr(thumb, "image", None):
+        if not thumb:
             return None
         request = self.context.get("request")
-        url = thumb.image.url
+        url = thumb.url
         return request.build_absolute_uri(url) if request else url
 
 
