@@ -18,9 +18,7 @@ let index = 0;
 
 let cells;
 let backBtn;
-let jobsForm;
-let jobsStatus;
-let jobsSubmitBtn;
+let jobsFormListenerAttached = false;
 
 let app = {
     _site: 'office',
@@ -78,32 +76,40 @@ const cellClickHandler = (id) => {
     backBtn.addEventListener('click', backClickHandler)
 };
 
-const getJobsPayload = () => ({
-    name: document.getElementById('jobs-fullname')?.value?.trim() || '',
-    email: document.getElementById('jobs-email')?.value?.trim() || '',
-    phone_number: document.getElementById('jobs-phone')?.value?.trim() || '',
+const getJobsPayload = (form) => ({
+    name: form?.querySelector('#jobs-fullname')?.value?.trim() || '',
+    email: form?.querySelector('#jobs-email')?.value?.trim() || '',
+    phone_number: form?.querySelector('#jobs-phone')?.value?.trim() || '',
 });
 
-const getJobsEndpoint = () => jobsForm?.dataset?.endpoint || '/api/jobs/';
+const getJobsEndpoint = (form) => form?.dataset?.endpoint || '/api/jobs/';
 
-const renderJobsStatus = (message, isError = false) => {
-    if (!jobsStatus) return;
-    jobsStatus.textContent = message;
-    jobsStatus.classList.toggle('error', Boolean(isError));
+const renderJobsStatus = (form, message, isError = false) => {
+    const status = form?.querySelector('#jobs-status');
+    if (!status) return;
+    status.textContent = message;
+    status.classList.toggle('error', Boolean(isError));
+};
+
+const toggleJobsSubmittingState = (form, isSubmitting) => {
+    const submitBtn = form?.querySelector('#jobs-submit');
+    if (!submitBtn) return;
+    submitBtn.disabled = isSubmitting;
+    submitBtn.textContent = isSubmitting ? 'Saving...' : 'Save';
 };
 
 const submitJobsForm = async (event) => {
+    if (!event.target || event.target.id !== 'jobs-form') return;
     event.preventDefault();
 
-    const payload = getJobsPayload();
-    if (jobsSubmitBtn) {
-        jobsSubmitBtn.disabled = true;
-        jobsSubmitBtn.textContent = 'Saving...';
-    }
-    renderJobsStatus('');
+    const form = event.target;
+    const payload = getJobsPayload(form);
+
+    toggleJobsSubmittingState(form, true);
+    renderJobsStatus(form, '');
 
     try {
-        const res = await fetch(getJobsEndpoint(), {
+        const res = await fetch(getJobsEndpoint(form), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -113,30 +119,24 @@ const submitJobsForm = async (event) => {
 
         if (!res.ok) {
             const errorText = `Save failed (HTTP ${res.status})`;
-            renderJobsStatus(errorText, true);
+            renderJobsStatus(form, errorText, true);
             throw new Error(errorText);
         }
 
-        renderJobsStatus('Saved successfully.');
-        jobsForm?.reset();
+        renderJobsStatus(form, 'Saved successfully.');
+        form.reset();
     } catch (err) {
+        renderJobsStatus(form, 'Save failed, please try again.', true);
         console.error('jobs submit failed', err);
     } finally {
-        if (jobsSubmitBtn) {
-            jobsSubmitBtn.disabled = false;
-            jobsSubmitBtn.textContent = 'Save';
-        }
+        toggleJobsSubmittingState(form, false);
     }
 };
 
 const initJobsForm = () => {
-    jobsForm = document.getElementById('jobs-form');
-    jobsStatus = document.getElementById('jobs-status');
-    jobsSubmitBtn = document.getElementById('jobs-submit');
-
-    if (!jobsForm) return;
-
-    jobsForm.addEventListener('submit', submitJobsForm);
+    if (jobsFormListenerAttached) return;
+    document.addEventListener('submit', submitJobsForm);
+    jobsFormListenerAttached = true;
 };
 const backClickHandler = () => {
     app.isDetail = false;
