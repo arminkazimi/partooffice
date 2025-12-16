@@ -108,10 +108,10 @@ const getCookie = (name) => {
 };
 
 const submitJobsForm = async (event) => {
-    if (!event.target || event.target.id !== 'jobs-form') return;
+    const form = event.target?.closest('#jobs-form');
+    if (!form) return;
     event.preventDefault();
 
-    const form = event.target;
     const payload = getJobsPayload(form);
     const csrfToken = getCookie('csrftoken');
 
