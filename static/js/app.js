@@ -84,6 +84,8 @@ const getJobsPayload = () => ({
     phone_number: document.getElementById('jobs-phone')?.value?.trim() || '',
 });
 
+const getJobsEndpoint = () => jobsForm?.dataset?.endpoint || '/api/jobs/';
+
 const renderJobsStatus = (message, isError = false) => {
     if (!jobsStatus) return;
     jobsStatus.textContent = message;
@@ -101,7 +103,7 @@ const submitJobsForm = async (event) => {
     renderJobsStatus('');
 
     try {
-        const res = await fetch('api/jobs/', {
+        const res = await fetch(getJobsEndpoint(), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -201,6 +203,7 @@ const DOMContentLoadedHandler = () => {
     console.log('DOM is ready!');
     // You can safely access elements here
     fetchProjects();
+    initJobsForm();
     // setupFormListener();
 };
 
