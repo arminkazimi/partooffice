@@ -89,7 +89,7 @@ class ProjectListAPIView(generics.ListAPIView):
     GET /api/projects/  -> list of projects
     (ListAPIView only implements GET)
     """
-    queryset = Project.objects.all().order_by("-project_date").prefetch_related("images").select_related("thumbnail")
+    queryset = Project.objects.all().order_by("-project_date").prefetch_related("images")
     serializer_class = ProjectSerializer
     permission_classes = [permissions.AllowAny]  # change to IsAuthenticated if needed
 
@@ -99,7 +99,7 @@ class ProjectDetailAPIView(generics.RetrieveAPIView):
     GET /api/projects/<pk>/  -> single project detail
     (RetrieveAPIView only implements GET)
     """
-    queryset = Project.objects.all().prefetch_related("images").select_related("thumbnail")
+    queryset = Project.objects.all().prefetch_related("images")
     serializer_class = ProjectSerializer
     permission_classes = [permissions.AllowAny]
     lookup_field = "pk"
@@ -108,7 +108,7 @@ class EventListAPIView(generics.ListAPIView):
     """
     GET /api/events/  -> list of events (GET-only)
     """
-    queryset = Event.objects.all().order_by("-event_date").prefetch_related("images").select_related("thumbnail")
+    queryset = Event.objects.all().order_by("-event_date").prefetch_related("images")
     serializer_class = EventSerializer
     permission_classes = [permissions.AllowAny]
 
@@ -117,7 +117,7 @@ class EventDetailAPIView(generics.RetrieveAPIView):
     """
     GET /api/events/<pk>/  -> event detail (GET-only)
     """
-    queryset = Event.objects.all().prefetch_related("images").select_related("thumbnail")
+    queryset = Event.objects.all().prefetch_related("images")
     serializer_class = EventSerializer
     permission_classes = [permissions.AllowAny]
     lookup_field = "pk"
