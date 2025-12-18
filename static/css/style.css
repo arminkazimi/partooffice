@@ -64,6 +64,9 @@ h3 {
     /*height: 100%;*/
     min-height: calc(100vh - 50px);
 }
+.hidden {
+    display: none !important;
+}
 
 #main {
     width: calc(100vw - 180px);
@@ -314,8 +317,8 @@ li button {
 #jobs-form input::placeholder {
   color: var(--light-gray)
 }
-.form-item {
-
+#jobs-form button {
+  color: var(--dark-teal)
 }
 
 #description-content {
@@ -518,6 +521,7 @@ button.prev, button.next {
 /*logo motion*/
 
 #logo-container {
+    cursor: pointer;
     margin: 0px;
     position: absolute;
     display: flex;
@@ -567,14 +571,19 @@ button.prev, button.next {
 
 #cir1 {
     top: 0px;
-    animation: upcir 1s 1 ease-in-out;
-}
 
+}
+.start #cir1 {
+    animation: upcir 1s 1 ease-in-out;
+
+}
 #cir2 {
     top: 38px;
-    animation: downcir 1s 1 ease-in-out;
 }
+.start #cir2 {
+    animation: downcir 1s 1 ease-in-out;
 
+}
 .curtain {
     width: 166px;
     height: 42px;
@@ -593,10 +602,11 @@ button.prev, button.next {
     margin: 0;
     border-radius: 16px;
     z-index: 8;
-    animation: partoframe 0.5s 1s 1 ease-in-out forwards;
 
 }
-
+.start .parto {
+    animation: partoframe 0.5s 1s 1 ease-in-out forwards;
+}
 .parto h1 {
     top: 0px;
     margin-left: 166px;
@@ -604,7 +614,10 @@ button.prev, button.next {
     font-size: 42px;
     font-weight: 800;
     color: var(--dark-teal);
+}
+.start .parto h1 {
     animation: parto 1s 0.7s 1 ease-in-out forwards;
+
 }
 
 .w {
@@ -628,9 +641,11 @@ button.prev, button.next {
     font-size: 42px;
     font-weight: 800;
     color: var(--light-gray);
+
+}
+.start .w h1 {
     animation: w 0.5s 1.5s 1 ease-in forwards;
 }
-
 #cir1-2 {
     opacity: 0;
     background-color: var(--bg-color);
@@ -639,6 +654,9 @@ button.prev, button.next {
     top: 7px;
     margin-left: 7px;
     z-index: 11;
+
+}
+.start #cir1-2 {
     animation: select1 2s 1s 1 ease-out forwards;
 }
 
@@ -650,9 +668,11 @@ button.prev, button.next {
     top: 45px;
     margin-left: 7px;
     z-index: 11;
-    animation: select2 2s 2.5s 1 ease-out forwards;
 }
+.start #cir2-2 {
+    animation: select2 2s 2.5s 1 ease-out forwards;
 
+}
 .office {
     position: absolute;
     width: 166px;
@@ -673,9 +693,10 @@ button.prev, button.next {
     font-size: 42px;
     font-weight: 800;
     color: var(--dark-teal);
+}
+.start .office h1 {
     animation: office 1s 2.2s 1 ease-in-out forwards;
 }
-
 #lang {
     position: absolute;
     bottom: 0px;
@@ -683,7 +704,10 @@ button.prev, button.next {
     z-index: 10;
     color: #668085;
     opacity: 0;
+}
+.start #lang {
     animation: lang 0.5s 3.3s 1 forwards;
+
 }
 
 .lang-link {
@@ -825,6 +849,12 @@ button.prev, button.next {
     }
 }
 
+/* Disable animations initially */
+.preload * {
+    animation: none !important;
+    transition: none !important;
+    display: none;
+}
 
 /*old css*/
 
@@ -959,10 +989,10 @@ button.prev, button.next {
 
 }
 
-.hidden {
-    display: none !important;
-    z-index: -1 !important;
-}
+/*.hidden {*/
+/*    display: none !important;*/
+/*    z-index: -1 !important;*/
+/*}*/
 
 .my-body {
     margin-top: 8rem;

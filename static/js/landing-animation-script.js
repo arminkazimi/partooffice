@@ -4,15 +4,34 @@ const xcontainer = document.getElementById('xcontainer');
 const ghostLogo = document.getElementById('ghost-logo');
 const projectsContent = document.getElementById('projects-content');
 
+const mainEl = document.getElementById('main');
+const sideBarEl = document.getElementById('side-bar');
 // const ghostLogoAnimation = () => {
 //
 // };
+window.addEventListener('load', async () => {
+    // Wait for all fonts to be ready
+    if (document.fonts) {
+        await document.fonts.ready;
+    }
+
+    // Enable animations
+    logoContainer.classList.remove('preload');
+
+    // OPTIONAL: if you want to start animations via class
+    logoContainer.classList.add('start');
+    logoContainer.addEventListener('click', wipeHandler);
+
+});
+
 
 const wipeHandler = () => {
     logoContainer.removeEventListener('click', wipeHandler);
     // Cover the screen from left to right
     wipe.style.width = '100vw';
     ghostLogo.style.animation = 'showGhostLogo 540ms 650ms forwards';
+    mainEl.classList.remove('hidden');
+    sideBarEl.classList.remove('hidden');
 
     // setTimeout(ghostLogoAnimation, 500)
     setTimeout(() => {
@@ -36,8 +55,6 @@ const wipeHandler = () => {
     }, 1200);
 
 };
-
-logoContainer.addEventListener('click', wipeHandler);
 
 
 // window.addEventListener('DOMContentLoaded', () => {

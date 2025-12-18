@@ -2,7 +2,7 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 
-from portfolio.models import Project, AboutMe, ContactMe, Education, ProductDoc, Product, Event, Job
+from portfolio.models import Project, AboutMe, ContactMe, Education, ProductDoc, Product, Event, Job, DesignOrder
 from .serializers import ProjectSerializer, AboutMeSerializer, ContactMeSerializer, EducationSerializer, \
     ProductDocSerializer, ProductSerializer, EventSerializer, JobCreateSerializer
 
@@ -128,4 +128,12 @@ class JobCreateAPIView(generics.CreateAPIView):
     """
     queryset = Job.objects.all()
     serializer_class = JobCreateSerializer
+    permission_classes = [permissions.AllowAny]
+
+class DesignOrderCreateAPIView(generics.CreateAPIView):
+    """
+    POST /api/jobs/  -> create a Job (POST-only)
+    """
+    queryset = DesignOrder.objects.all()
+    serializer_class = DesignOrderCreateSerializer
     permission_classes = [permissions.AllowAny]

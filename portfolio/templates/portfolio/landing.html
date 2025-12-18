@@ -3,179 +3,89 @@
 
 {% block title %}Parto Office{% endblock %}
 {% block body %}
+    <!--
     <div>
-        {#    <div class="container-fluid min-vh-100 gx-0 d-flex flex-column">#}
-        {##}
-        {#        <div class="row gx-0 ">#}
-        {#            <div class="col-xxl-11 col-xl-10 col-lg-10 col-md-9 col-sm-2 col-4 bg-danger">#}
-        {##}
-        {#            </div>#}
-        {#            <div class="col-xxl-1 col-xl-2 col-lg-2 col-md-3 col-sm-10 col-8 bg-success text-light">#}
-        {#                <div class="d-flex align-items-center justify-content-between">#}
-        {#                    <div class="logo" hx-get="{% url 'toggle' %}" hx-trigger="customEvent, click"#}
-        {#                         hx-target=".content"#}
-        {#                         _="on click toggle between .active and .deactivated on #parto#}
-        {#on click toggle between .active and .deactivated on #office#}
-        {#on click toggle between .d-none and .d-block on #office-menu#}
-        {#on click toggle between .d-none and .d-block on #parto-menu">#}
-        {#                        <div class="d-flex justify-content-start align-items-center mt-2 x-ms-n5">#}
-        {##}
-        {#                            <div class="x-primary">part</div>#}
-        {#                            <div id="parto" class=" circle deactivated"></div>#}
-        {#                        </div>#}
-        {#                        <div class="d-flex justify-content-start align-items-center mt-0 x-ms-n1">#}
-        {##}
-        {##}
-        {#                            <div id="office" class="circle active"></div>#}
-        {#                            <div class="">ffice</div>#}
-        {##}
-        {#                        </div>#}
-        {##}
-        {##}
-        {#                    </div>#}
-        {#                    <div class="me-5">#}
-        {#                        <!-- Mobile Menu -->#}
-        {#                        <div class="hamburger">#}
-        {#                            <span class="bar"></span>#}
-        {#                            <span class="bar"></span>#}
-        {#                            <span class="bar"></span>#}
-        {#                        </div>#}
-        {#                        <div class="mobile-menu">#}
-        {##}
-        {#                            <nav>#}
-        {#                                <ul id="parto-menu" class="d-none nav nav-bar flex-column">#}
-        {#                                    <li class="nav-item">#}
-        {#                                        <a class="link-light nav-link x-active disabled"#}
-        {#                                           id="description"#}
-        {#                                           href=""#}
-        {#                                           hx-get="{% url 'description' %}"#}
-        {#                                           hx-target=".main-content"#}
-        {#                                           hx-indicator=".loading-indicator"#}
-        {#                                           hx-on:click="setActive(this)">Description</a>#}
-        {#                                    </li>#}
-        {#                                    <li class="nav-item">#}
-        {#                                        <a class="link-light nav-link"#}
-        {#                                           id="events"#}
-        {#                                           href=""#}
-        {#                                           hx-get="{% url 'event-list' %}"#}
-        {#                                           hx-target=".main-content"#}
-        {#                                           hx-indicator=".loading-indicator"#}
-        {#                                           hx-on:click="setActive(this)">Events</a>#}
-        {#                                    </li>#}
-        {#                                    <li class="nav-item">#}
-        {#                                        <a class="link-light nav-link"#}
-        {#                                           id="contacts"#}
-        {#                                           href=""#}
-        {#                                           hx-get="{% url 'contacts' %}"#}
-        {#                                           hx-target=".main-content"#}
-        {#                                           hx-indicator=".loading-indicator"#}
-        {##}
-        {#                                           hx-on:click="setActive(this)">Contacts</a>#}
-        {#                                    </li>#}
-        {#                                    <li class="nav-item">#}
-        {#                                        <a class="link-light nav-link"#}
-        {#                                           id="jobs"#}
-        {#                                           href=""#}
-        {#                                           hx-get="{% url 'jobs' %}"#}
-        {#                                           hx-target=".main-content"#}
-        {#                                           hx-on:click="setActive(this)">Jobs</a>#}
-        {#                                    </li>#}
-        {#                                </ul>#}
-        {#                                <ul id="office-menu" class="d-block nav nav-bar flex-column">#}
-        {#                                    <li class="nav-item">#}
-        {#                                        <a class="link-light nav-link x-active disabled"#}
-        {#                                           id="projects"#}
-        {#                                           href=""#}
-        {#                                           hx-get="{% url 'project-list' %}"#}
-        {#                                           hx-target=".main-content"#}
-        {#                                           hx-indicator=".loading-indicator"#}
-        {#                                           hx-on:click="setActive(this)">Projects</a>#}
-        {#                                    </li>#}
-        {#                                    <li class="nav-item">#}
-        {#                                        <a class="link-light nav-link"#}
-        {#                                           id="production"#}
-        {#                                           href=""#}
-        {#                                           hx-get="{% url 'product-retrieve' %}"#}
-        {#                                           hx-target=".main-content"#}
-        {#                                           hx-indicator=".loading-indicator"#}
-        {#                                           hx-on:click="setActive(this)">Production</a>#}
-        {#                                    </li>#}
-        {#                                    <li class="nav-item">#}
-        {#                                        <a class="link-light nav-link"#}
-        {#                                           id="design-order"#}
-        {#                                           href=""#}
-        {#                                           hx-get="{% url 'design-create' %}"#}
-        {#                                           hx-target=".main-content"#}
-        {#                                           hx-indicator=".loading-indicator"#}
-        {#                                           hx-on:click="setActive(this)">Design order</a>#}
-        {#                                    </li>#}
-        {#                                    <li class="nav-item">#}
-        {#                                        <a class="link-light nav-link"#}
-        {#                                           id="education"#}
-        {#                                           href=""#}
-        {#                                           hx-get="{% url 'education' %}"#}
-        {#                                           hx-target=".main-content"#}
-        {#                                           hx-on:click="setActive(this)">Education</a>#}
-        {#                                    </li>#}
-        {#                                </ul>#}
-        {#                            </nav>#}
-        {#                        </div>#}
-        {#                    </div>#}
-        {#                </div>#}
-        {#            </div>#}
-        {#        </div>#}
-        {#        <div class="row gx-0 content flex-grow-1">#}
-        {##}
-        {#            {% include 'pages/partials/office/index.html' %}#}
-        {##}
-        {##}
-        {#        </div>#}
-        {##}
-        {#        <!-- Landing -->#}
-        {##}
-        {#        <div id="logo-container">#}
-        {#            <div id="xcontainer">#}
-        {#                <div id="circles">#}
-        {#                    <div class="cir" id="cir1"></div>#}
-        {#                    <div class="cir" id="cir2"></div>#}
-        {#                    <div class="cir" id="cir1-2"></div>#}
-        {#                    <div class="cir" id="cir2-2"></div>#}
-        {#                </div>#}
-        {#                <div class="parto"><h1>part</h1></div>#}
-        {#                <div class="w"><h1>w</h1></div>#}
-        {#                <div class="office"><h1>ffice</h1></div>#}
-        {#                <div id="lang">#}
-        {#                    <a href="#" class="lang-link">En</a> |#}
-        {#                    <a href="#" class="lang-link">Fa</a>#}
-        {#                </div>#}
-        {#            </div>#}
-        {#        </div>#}
-        {#        <div class="wipe"></div>#}
-        {##}
-        {#    </div>#}
-    </div>
 
+    </div>
+-->
 
     <div class="container">
-        <div id="main">
+        <div id="main" class="hidden">
             <span id="page-title"><h2>Projects</h2></span>
             <div id="projects-container">
                 <div id="page-header" class="projects-header"></div>
                 <div id="projects-content">
-                    <div class="cell">cell</div>
-                    <div class="cell">cell</div>
-                    <div class="cell">cell</div>
-                    <div class="cell">cell</div>
-                    <div class="cell">cell</div>
-                    <div class="cell">cell</div>
-                    <div id="page-number">
+                    <button class="cell" data-id="1" style="background-image: url('static/img/4.png')">
+                        <div class="cell-cover">
+                            <span class="cell-title">title</span>
+                            <span class="cell-place">place</span>
+                            <span class="cell-date">date</span>
+                        </div>
 
-                    </div>
+                    </button>
+                    <button class="cell" data-id="2" style="background-image: url('static/img/4.png')">
+                        <div class="cell-cover">
+                            <span class="cell-title">title</span>
+                            <span class="cell-place">place</span>
+                            <span class="cell-date">date</span>
+                        </div>
+
+                    </button>
+                    <button class="cell" data-id="3" style="background-image: url('static/img/4.png')">
+                        <div class="cell-cover">
+                            <span class="cell-title">title</span>
+                            <span class="cell-place">place</span>
+                            <span class="cell-date">date</span>
+                        </div>
+
+                    </button>
+                    <button class="cell" data-id="4" style="background-image: url('static/img/3.jpg')">
+                        <div class="cell-cover">
+                            <span class="cell-title">title</span>
+                            <span class="cell-place">place</span>
+                            <span class="cell-date">date</span>
+                        </div>
+
+                    </button>
+                    <button class="cell" data-id="5" style="background-image: url('static/img/3.jpg')">
+                        <div class="cell-cover">
+                            <span class="cell-title">title</span>
+                            <span class="cell-place">place</span>
+                            <span class="cell-date">date</span>
+                        </div>
+
+                    </button>
+                    <button class="cell" data-id="6" style="background-image: url('static/img/3.jpg')">
+                        <div class="cell-cover">
+                            <span class="cell-title">title</span>
+                            <span class="cell-place">place</span>
+                            <span class="cell-date">date</span>
+                        </div>
+
+                    </button>
+                    <button class="cell" data-id="7" style="background-image: url('static/img/3.jpg')">
+                        <div class="cell-cover">
+                            <span class="cell-title">title</span>
+                            <span class="cell-place">place</span>
+                            <span class="cell-date">date</span>
+                        </div>
+
+                    </button>
+                    <button class="cell" data-id="8" style="background-image: url('static/img/3.jpg')">
+                        <div class="cell-cover">
+                            <span class="cell-title">title</span>
+                            <span class="cell-place">place</span>
+                            <span class="cell-date">date</span>
+                        </div>
+
+                    </button>
+
+                    <div id="page-number">1 2 3</div>
 
                 </div>
             </div>
         </div>
-        <div class="side-bar">
+        <div id="side-bar" class="side-bar hidden">
             <div>
                 <a id="logo-btn">
                     <div id="logo">
@@ -213,7 +123,7 @@
         </div>
 
         <!-- Landing -->
-        <div id="logo-container">
+        <div id="logo-container" class="preload">
             <div id="xcontainer">
                 <div id="circles">
                     <div class="cir" id="cir1"></div>
@@ -231,19 +141,19 @@
             </div>
         </div>
         <div class="wipe"></div>
-{#        <div id="ghost-logo-container">#}
-            <div id="ghost-logo">
+        {#        <div id="ghost-logo-container">#}
+        <div id="ghost-logo">
             <span id="partow-line-ghost">
                         <span id="parto-ghost">part</span>
                         <span id="part-o-ghost"></span>
                         <span id="w-ghost">w</span>
                      </span>
-                <span id="office-line-ghost">
+            <span id="office-line-ghost">
                         <span id="o-ffice-ghost"></span>
                         <span id="office-ghost">ffice</span>
                     </span>
-            </div>
-{#        </div>#}
+        </div>
+        {#        </div>#}
     </div>
 
     <!-- templates -->

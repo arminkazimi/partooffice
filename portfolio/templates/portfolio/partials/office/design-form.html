@@ -1,2 +1,40 @@
 {% load static %}
+<template id="design-order-section">
+    <span id="page-title"><h2>Design Order</h2></span>
+    <div id="design-order-container">
+        <div id="page-header" class="design-order-header">
+            <div class="empty-col"></div>
+            <div class="col">Step1: <span class="site-name">Contact Information</span> </div>
+            </div>
+        <div id="design-order-content">
+            <div class="description-col"><p class="design-order-description-content"><span class="site-name">Welcome to Design Order section - </span>
+            Here, you can easily submit your design request by filling out a simple step-by-step form.
 
+            Just follow the guided process, share your details, and we'll handle the rest to bring your vision to life.</p></div>
+            <div class="input-col">
+                <form id="design-order-form" data-endpoint="/api/design-order/create/" method="post">
+                    {% csrf_token %}
+                    <input type="text" class="form-item" id="design-order-fullname" name="name" placeholder="your full name">
+                    <input type="email" class="form-item" id="design-order-email" name="email" placeholder="your Email">
+                    <input type="phone" class="form-item" id="design-order-phone" name="phone_number" placeholder="your Phone number">
+                    <button type="button" class="form-item" id="design-order-button">Next</button>
+                    <p class="design-order-steps" id="design-order-steps" aria-live="polite">
+                        <span class="form-steps">1</span>
+                        .
+                        <span class="form-steps">2</span>
+                        .
+                        <span class="form-steps">3</span>
+                        .
+                        <span class="form-steps">4</span>
+                        .
+                        <span class="form-steps">5 </span>
+
+                    </p>
+
+                    <p class="design-order-status" id="design-order-status" aria-live="polite"></p>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</template>

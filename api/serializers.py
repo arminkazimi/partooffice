@@ -10,7 +10,7 @@ from portfolio.models import (
     ProductDoc,
     Product,
     Event,
-    EventImage, Job,
+    EventImage, Job, DesignOrder,
 )
 
 
@@ -189,6 +189,20 @@ class JobCreateSerializer(serializers.ModelSerializer):
         model = Job
         # allow client to provide name, email, phone_number
         fields = ("id", "name", "email", "phone_number", "uploaded_at", "created_at")
+        read_only_fields = ("id", "uploaded_at", "created_at")
+
+    # optional: add simple phone validation (adjust to your needs)
+    def validate_phone_number(self, value):
+        value = value.strip()
+        if len(value) < 10:  # very basic check
+            raise serializers.ValidationError("Phone number is too short.")
+        return value
+
+class DesignOrderCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DesignOrder
+        # allow client to provide name, email, phone_number
+        fields = ("id", "name", "email", "phone_number", "contact_method", "uploaded_at", "created_at")
         read_only_fields = ("id", "uploaded_at", "created_at")
 
     # optional: add simple phone validation (adjust to your needs)

@@ -123,7 +123,7 @@ const submitJobsForm = async (event) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                ...(csrfToken ? { 'X-CSRFToken': csrfToken } : {}),
+                ...(csrfToken ? {'X-CSRFToken': csrfToken} : {}),
             },
             body: JSON.stringify(payload),
         });
@@ -153,7 +153,7 @@ const backClickHandler = () => {
     app.isDetail = false;
     renderActiveSection()
     initTiles();
-    
+
 };
 
 const initImageSlider = () => {
@@ -215,6 +215,9 @@ const DOMContentLoadedHandler = () => {
     // You can safely access elements here
     fetchProjects();
     initJobsForm();
+    // init projects functionalities
+    initTiles();
+    console.log('projects activated by default');
     // setupFormListener();
 };
 

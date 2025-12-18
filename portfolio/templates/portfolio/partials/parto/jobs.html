@@ -9,7 +9,7 @@
         <div id="jobs-content">
             <div class="description-col"><p class="jobs-description-content">Speculative application for <span class="site-name">PartOOffice.</span></p></div>
             <div class="input-col">
-                <form id="jobs-form" data-endpoint="/api/jobs/" method="post">
+                <form id="jobs-form" data-endpoint="/api/jobs/create/" method="post">
                     {% csrf_token %}
                     <input type="text" class="form-item" id="jobs-fullname" name="name" placeholder="your full name">
                     <input type="email" class="form-item" id="jobs-email" name="email" placeholder="your Email">

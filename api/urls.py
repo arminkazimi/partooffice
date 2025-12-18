@@ -8,7 +8,8 @@ from .views import (
     EducationListAPIView,
     ProductDocAPIView,
     ProductListAPIView,
-    ProductDetailAPIView, EventListAPIView, EventDetailAPIView, JobCreateAPIView,
+    ProductDetailAPIView,
+    EventListAPIView, EventDetailAPIView, JobCreateAPIView,
 )
 
 urlpatterns = [
@@ -24,5 +25,6 @@ urlpatterns = [
     path('events/', EventListAPIView.as_view(), name='event-list'),
     path('events/<int:pk>/', EventDetailAPIView.as_view(), name='event-detail'),
 
-    path('jobs/', JobCreateAPIView.as_view(), name='job-create'),
+    path('jobs/create/', JobCreateAPIView.as_view(), name='job-create'),
+    path('design/create/', JobCreateAPIView.as_view(), name='designorder-create'),
 ]

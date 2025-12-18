@@ -54,8 +54,19 @@ class ContactMe(SingletonModel):
         return f'{self.mobile}, {self.phone}, {self.email1}, {self.email2}'
 
 
-# class DesignOrder(models.Model):
-#     pass
+class DesignOrder(models.Model):
+    class ContactMethod(models.TextChoices):
+        TELEGRAM = 'TL', _('telegram')
+        WHATSAPP = 'WP', _('whatsapp')
+        EMAIL = 'EL', _('email')
+
+    name = models.CharField(max_length=255)
+    email = models.EmailField()
+    phone_number = models.CharField(max_length=255)
+    contact_method = models.CharField(max_length=3, choices=ContactMethod.choices, default=ContactMethod.TELEGRAM)
+
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class Education(models.Model):
@@ -136,6 +147,7 @@ class Project(models.Model):
     def __str__(self):
         return self.name
 
+
 class ProjectImage(models.Model):
     project = models.ForeignKey(
         Project,
@@ -176,6 +188,7 @@ class Event(models.Model):
     def __str__(self):
         return self.name
 
+
 class EventImage(models.Model):
     event = models.ForeignKey(
         Event,
@@ -200,5 +213,3 @@ class Job(models.Model):
 
     uploaded_at = models.DateTimeField(auto_now_add=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
-
