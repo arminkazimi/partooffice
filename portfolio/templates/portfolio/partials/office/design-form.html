@@ -4,31 +4,69 @@
     <div id="design-order-container">
         <div id="page-header" class="design-order-header">
             <div class="empty-col"></div>
-            <div class="col">Step1: <span class="site-name">Contact Information</span> </div>
+            <div class="col">
+                Step <span id="design-current-step">1</span> of 9:
+                <span class="site-name" id="design-step-title">Contact Information</span>
             </div>
+        </div>
         <div id="design-order-content">
             <div class="description-col"><p class="design-order-description-content"><span class="site-name">Welcome to Design Order section - </span>
             Here, you can easily submit your design request by filling out a simple step-by-step form.
 
             Just follow the guided process, share your details, and we'll handle the rest to bring your vision to life.</p></div>
             <div class="input-col">
-                <form id="design-order-form" data-endpoint="/api/design-order/create/" method="post">
+                <form id="design-order-form" data-endpoint="/api/design/create/" data-total-steps="9" data-current-step="1" method="post" novalidate>
                     {% csrf_token %}
-                    <input type="text" class="form-item" id="design-order-fullname" name="name" placeholder="your full name">
-                    <input type="email" class="form-item" id="design-order-email" name="email" placeholder="your Email">
-                    <input type="phone" class="form-item" id="design-order-phone" name="phone_number" placeholder="your Phone number">
-                    <button type="button" class="form-item" id="design-order-button">Next</button>
+                    <div class="design-step" data-step="1" data-title="Contact Information">
+                        <input type="text" class="form-item" id="design-order-fullname" name="name" placeholder="your full name">
+                    </div>
+                    <div class="design-step" data-step="2" data-title="Email Address" hidden>
+                        <input type="email" class="form-item" id="design-order-email" name="email" placeholder="your Email">
+                    </div>
+                    <div class="design-step" data-step="3" data-title="Phone Number" hidden>
+                        <input type="phone" class="form-item" id="design-order-phone" name="phone_number" placeholder="your Phone number">
+                    </div>
+                    <div class="design-step" data-step="4" data-title="Project Name" hidden>
+                        <input type="text" class="form-item" id="design-order-project" name="project_name" placeholder="project name or title">
+                    </div>
+                    <div class="design-step" data-step="5" data-title="Project Type" hidden>
+                        <input type="text" class="form-item" id="design-order-type" name="project_type" placeholder="branding, interior, web, etc.">
+                    </div>
+                    <div class="design-step" data-step="6" data-title="Project Goals" hidden>
+                        <textarea class="form-item" id="design-order-goals" name="project_goals" placeholder="key goals or outcomes"></textarea>
+                    </div>
+                    <div class="design-step" data-step="7" data-title="Budget" hidden>
+                        <input type="text" class="form-item" id="design-order-budget" name="budget" placeholder="estimated budget">
+                    </div>
+                    <div class="design-step" data-step="8" data-title="Timeline" hidden>
+                        <input type="text" class="form-item" id="design-order-timeline" name="timeline" placeholder="preferred timeline or deadline">
+                    </div>
+                    <div class="design-step" data-step="9" data-title="Additional Notes" hidden>
+                        <textarea class="form-item" id="design-order-notes" name="notes" placeholder="any additional details or references"></textarea>
+                    </div>
+                    <div class="design-order-actions">
+                        <button type="button" class="form-item design-step-nav" id="design-order-prev" disabled>Previous</button>
+                        <button type="button" class="form-item design-step-nav" id="design-order-next">Next</button>
+                        <button type="submit" class="form-item" id="design-order-submit" hidden>Submit</button>
+                    </div>
                     <p class="design-order-steps" id="design-order-steps" aria-live="polite">
-                        <span class="form-steps">1</span>
+                        <span class="form-steps active-step" data-step="1" aria-current="step">1</span>
                         .
-                        <span class="form-steps">2</span>
+                        <span class="form-steps" data-step="2" aria-current="false">2</span>
                         .
-                        <span class="form-steps">3</span>
+                        <span class="form-steps" data-step="3" aria-current="false">3</span>
                         .
-                        <span class="form-steps">4</span>
+                        <span class="form-steps" data-step="4" aria-current="false">4</span>
                         .
-                        <span class="form-steps">5 </span>
-
+                        <span class="form-steps" data-step="5" aria-current="false">5 </span>
+                        .
+                        <span class="form-steps" data-step="6" aria-current="false">6 </span>
+                        .
+                        <span class="form-steps" data-step="7" aria-current="false">7 </span>
+                        .
+                        <span class="form-steps" data-step="8" aria-current="false">8 </span>
+                        .
+                        <span class="form-steps" data-step="9" aria-current="false">9 </span>
                     </p>
 
                     <p class="design-order-status" id="design-order-status" aria-live="polite"></p>

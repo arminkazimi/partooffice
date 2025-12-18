@@ -19,6 +19,8 @@ let index = 0;
 let cells;
 let backBtn;
 let jobsFormListenerAttached = false;
+let designFormListenerAttached = false;
+const DESIGN_FORM_DEFAULT_TOTAL_STEPS = 9;
 
 let app = {
     _site: 'office',
@@ -98,6 +100,100 @@ const toggleJobsSubmittingState = (form, isSubmitting) => {
     submitBtn.textContent = isSubmitting ? 'Saving...' : 'Save';
 };
 
+const getDesignPayload = (form) => {
+    if (!form) return {};
+    const payload = {};
+    const formData = new FormData(form);
+
+    formData.forEach((value, key) => {
+        if (key === 'csrfmiddlewaretoken') return;
+        payload[key] = typeof value === 'string' ? value.trim() : value;
+    });
+
+    return payload;
+};
+
+const getDesignEndpoint = (form) => form?.dataset?.endpoint || '/api/design/create/';
+
+const renderDesignStatus = (form, message, isError = false) => {
+    const status = form?.querySelector('#design-order-status');
+    if (!status) return;
+    status.textContent = message;
+    status.classList.toggle('error', Boolean(isError));
+};
+
+const toggleDesignSubmittingState = (form, isSubmitting) => {
+    const submitBtn = form?.querySelector('#design-order-submit');
+    const navBtns = form?.querySelectorAll('.design-step-nav');
+    if (submitBtn) submitBtn.disabled = isSubmitting;
+    navBtns?.forEach(btn => {
+        btn.disabled = isSubmitting;
+    });
+    if (submitBtn) submitBtn.textContent = isSubmitting ? 'Submitting...' : 'Submit';
+};
+
+const getDesignFormState = (form) => ({
+    currentStep: Number(form?.dataset?.currentStep) || 1,
+    totalSteps: Number(form?.dataset?.totalSteps) || DESIGN_FORM_DEFAULT_TOTAL_STEPS,
+});
+
+const updateDesignStepIndicator = (form, targetStep) => {
+    const indicators = form?.querySelectorAll('#design-order-steps .form-steps');
+    if (!indicators) return;
+    indicators.forEach(indicator => {
+        const stepNumber = Number(indicator.dataset.step);
+        const isActive = stepNumber === targetStep;
+        indicator.classList.toggle('active-step', isActive);
+        indicator.setAttribute('aria-current', isActive ? 'step' : 'false');
+    });
+};
+
+const updateDesignStepTitle = (form, targetStep) => {
+    const container = form?.closest('#design-order-container');
+    const currentStepDisplay = container?.querySelector('#design-current-step');
+    const stepTitleDisplay = container?.querySelector('#design-step-title');
+
+    if (currentStepDisplay) currentStepDisplay.textContent = targetStep;
+
+    const activeStep = form?.querySelector(`.design-step[data-step="${targetStep}"]`);
+    const stepTitle = activeStep?.dataset?.title;
+    if (stepTitleDisplay && stepTitle) stepTitleDisplay.textContent = stepTitle;
+};
+
+const setDesignFormStep = (form, requestedStep) => {
+    if (!form) return;
+    const { totalSteps } = getDesignFormState(form);
+    const targetStep = Math.min(Math.max(requestedStep, 1), totalSteps);
+    form.dataset.currentStep = targetStep;
+
+    const steps = form.querySelectorAll('.design-step');
+    steps.forEach(step => {
+        const stepNumber = Number(step.dataset.step);
+        step.hidden = stepNumber !== targetStep;
+    });
+
+    const prevBtn = form.querySelector('#design-order-prev');
+    const nextBtn = form.querySelector('#design-order-next');
+    const submitBtn = form.querySelector('#design-order-submit');
+
+    if (prevBtn) prevBtn.disabled = targetStep === 1;
+    if (nextBtn) {
+        nextBtn.disabled = targetStep === totalSteps;
+        nextBtn.hidden = targetStep === totalSteps;
+    }
+    if (submitBtn) submitBtn.hidden = targetStep !== totalSteps;
+
+    updateDesignStepIndicator(form, targetStep);
+    updateDesignStepTitle(form, targetStep);
+};
+
+const syncDesignFormState = () => {
+    const form = document.getElementById('design-order-form');
+    if (!form) return;
+    const { currentStep } = getDesignFormState(form);
+    setDesignFormStep(form, currentStep);
+};
+
 const getCookie = (name) => {
     if (!document.cookie) return null;
     const token = document.cookie
@@ -148,6 +244,71 @@ const initJobsForm = () => {
     if (jobsFormListenerAttached) return;
     document.addEventListener('submit', submitJobsForm);
     jobsFormListenerAttached = true;
+};
+
+const handleDesignStepNavigation = (event) => {
+    const target = event.target;
+    if (!target?.classList?.contains('design-step-nav')) return;
+    const form = target.closest('#design-order-form');
+    if (!form) return;
+
+    event.preventDefault();
+    const { currentStep, totalSteps } = getDesignFormState(form);
+    const direction = target.id === 'design-order-prev' ? -1 : 1;
+    setDesignFormStep(form, currentStep + direction);
+    const { currentStep: nextStep } = getDesignFormState(form);
+    if (nextStep >= totalSteps) {
+        const submitBtn = form.querySelector('#design-order-submit');
+        if (submitBtn) submitBtn.focus();
+    }
+};
+
+const submitDesignForm = async (event) => {
+    const form = event.target?.closest('#design-order-form');
+    if (!form) return;
+    event.preventDefault();
+
+    const payload = getDesignPayload(form);
+    const csrfToken = getCookie('csrftoken');
+
+    toggleDesignSubmittingState(form, true);
+    renderDesignStatus(form, '');
+
+    try {
+        const res = await fetch(getDesignEndpoint(form), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                ...(csrfToken ? {'X-CSRFToken': csrfToken} : {}),
+            },
+            body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) {
+            const errorText = `Save failed (HTTP ${res.status})`;
+            renderDesignStatus(form, errorText, true);
+            throw new Error(errorText);
+        }
+
+        renderDesignStatus(form, 'Submitted successfully.');
+        form.reset();
+        setDesignFormStep(form, 1);
+    } catch (err) {
+        renderDesignStatus(form, 'Submit failed, please try again.', true);
+        console.error('design submit failed', err);
+    } finally {
+        toggleDesignSubmittingState(form, false);
+        syncDesignFormState();
+    }
+};
+
+const initDesignForm = () => {
+    if (!designFormListenerAttached) {
+        document.addEventListener('click', handleDesignStepNavigation);
+        document.addEventListener('submit', submitDesignForm);
+        designFormListenerAttached = true;
+    }
+    syncDesignFormState();
 };
 const backClickHandler = () => {
     app.isDetail = false;
@@ -215,6 +376,7 @@ const DOMContentLoadedHandler = () => {
     // You can safely access elements here
     fetchProjects();
     initJobsForm();
+    initDesignForm();
     // init projects functionalities
     initTiles();
     console.log('projects activated by default');
@@ -275,6 +437,7 @@ const menuClickHandler = (event) => {
                 console.log('production clicked', item);
                 break;
             case 'design-order':
+                initDesignForm();
                 console.log('design-order clicked', item);
                 break;
             case 'education':
